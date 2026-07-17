@@ -12,12 +12,13 @@ function App() {
     const [message, setMessage] = useState("");
     const [tries, setTries] = useState(0);
     const [shake, setShake] = useState(false);
+    const API_BASE = import.meta.env.VITE_API_BASE_URL;
+
 
 
     useEffect(() => {
-        fetch('http://localhost:8080/Blurtle/getScrambledWord')
-            .then(response => response.json())
-            .then(data => setPrompt(data))
+        api.get("/Blurtle/getScrambledWord")
+            .then(response => setPrompt(response.data))
             .catch(error => console.error("Error fetching data:", error));
     }, []);
 
@@ -45,7 +46,7 @@ function App() {
         console.log("Sending guess: ", guess);
 
         try{
-            const res = await api.post("/postGuessWord", { guessWord : guess});
+            const res = await api.post("/Blurtle/postGuessWord", { guessWord : guess });
             const data = res.data;
             if(!data.validWord){
                 triggerShake();
@@ -88,45 +89,34 @@ function App() {
   return (
 
 
-      <div style={{ textAlign: "center", marginTop: "50px" }}>
+      <div className="app-container">
         <h1>Blurtle</h1>
         <h4>Unscramble the letters to form a word. <br/> Any word made from the available letters counts, but max points for using all of them!</h4>
         <div>
-            <p style={{
-                    textAlign: "left",
-                    paddingLeft: "350px"}}>
-                <span class="red-text"> Red </span>= Valid Word, but incorrect use of available letters<br/>
-                <span class="blue-text"> Blue </span>= Valid Guess using only available letters, but not max points.<br/>
-                <span class="green-text">Green </span>= Perfect Score!
+            <p className="rules">
+                <span className="red-text"> Red </span>= Valid Word, but incorrect use of available letters<br/>
+                <span className="blue-text"> Blue </span>= Valid Guess using only available letters, but not max points.<br/>
+                <span className="green-text">Green </span>= Perfect Score!
             </p>
         </div>
 
 
 
           {prompt && <h4 style={{
-              color: "#ffffff",
+              color: "#808080",
               fontWeight: "bold"
           }}>{prompt.scrambledWord}</h4>}
 
         <form id="guessForm" onSubmit={handleSubmit}>
-          <input
-              disabled={tries >= 5}
-              className={shake ? "shake": ""}
-              onAnimationEnd={() => setShake(false)}
-              type="text"
-              value={guess}
-              maxLength={15}
-              onChange={(e) => setGuess(e.target.value)}
-              style={{
-                textTransform: "uppercase",
-                fontFamily: "monospace",
-                fontSize: "24px",
-                display: "inline-block",
-                width: "300px",
-                textAlign: "left",
-                letterSpacing: "8px",
-              }}
-          />
+            <input
+                disabled={tries >= 5}
+                className={`guess-input ${shake ? "shake" : ""}`}
+                onAnimationEnd={() => setShake(false)}
+                type="text"
+                value={guess}
+                maxLength={15}
+                onChange={(e) => setGuess(e.target.value)}
+            />
 
           <br />
           <br />
@@ -156,16 +146,16 @@ function App() {
                     <div
                         key={i}
                         style={{
-                          width: "40px",
-                          height: "40px",
-                          border: "2px solid gray",
-                          display: "flex",
-                          alignItems: "center",
-                          justifyContent: "center",
-                          fontWeight: "bold",
-                          fontSize: "20px",
-                          backgroundColor: g.exactMatch ? "green" : g.validGuess ? "blue" : "red",
-                          color: "white"
+                            width: "clamp(28px, 9vw, 40px)",
+                            height: "clamp(28px, 9vw, 40px)",
+                            border: "2px solid gray",
+                            display: "flex",
+                            alignItems: "center",
+                            justifyContent: "center",
+                            fontWeight: "bold",
+                            fontSize: "clamp(14px, 5vw, 20px)",
+                            backgroundColor: g.exactMatch ? "green" : g.validGuess ? "blue" : "red",
+                            color: "white"
                         }}
                     >
                       {letter}
