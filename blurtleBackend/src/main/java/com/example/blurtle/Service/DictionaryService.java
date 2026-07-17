@@ -51,8 +51,8 @@ public class DictionaryService {
 
         //Create a random object seeded with today's date according to GMT.
         //Use the first int of the random int stream to specify the index of the word used from the prompt dictionary
-//        Random random = new Random(LocalDate.now(ZoneId.of(zoneID)).toEpochDay());
-        Random random = new Random();
+        Random random = new Random(LocalDate.now(ZoneId.of(zoneID)).toEpochDay());
+//        Random random = new Random();
         dailyWord = promptDictionary.get(random.nextInt(promptDictionary.size()));
 
         return dailyWord;

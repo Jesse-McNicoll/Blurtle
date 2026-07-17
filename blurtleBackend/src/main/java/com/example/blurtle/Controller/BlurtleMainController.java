@@ -8,11 +8,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
 import java.util.Map;
 
 @RestController
 @RequestMapping("/Blurtle")
-@CrossOrigin(origins = "http://localhost:5173")
 public class BlurtleMainController {
 
     private static final Logger logger = LoggerFactory.getLogger(BlurtleMainController.class);
@@ -20,6 +20,8 @@ public class BlurtleMainController {
     private String randomWord = "";
 
     private String scrambledWord = "";
+
+    private LocalDate currentDate = LocalDate.now();
 
     private final DictionaryService dictionaryService;
 
@@ -54,11 +56,10 @@ public class BlurtleMainController {
 
     @GetMapping("/getScrambledWord")
     public Map<String, String> getScrambledWord(){
-        if(randomWord.length() == 0){
+        if(randomWord.length() == 0 || !LocalDate.now().equals(currentDate)){
             randomWord = dictionaryService.getDailyRandomWord();
-        }
-        if(scrambledWord.length() == 0){
             scrambledWord = scrambleService.scramble(randomWord);
+            currentDate = LocalDate.now();
         }
         return Map.of("word", randomWord, "scrambledWord", scrambledWord, "size", wordSize().toString());
     }
