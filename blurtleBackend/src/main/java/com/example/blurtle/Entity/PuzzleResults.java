@@ -1,10 +1,24 @@
 package com.example.blurtle.Entity;
 
+import jakarta.persistence.*;
+
+@Entity
+@Table(name ="puzzle_results")
+@IdClass(PuzzleResultId.class)
 public class PuzzleResults {
 
+    @Id
+    @ManyToOne
+    @JoinColumn(name = "user_id")
     private Long userId;
+
+    @Id
+    @ManyToOne
+    @JoinColumn(name = "puzzle_id")
     private Long puzzleId;
+
     private Long numGuesses;
+
     private Boolean puzzleSolved;
 
     public PuzzleResults() {
