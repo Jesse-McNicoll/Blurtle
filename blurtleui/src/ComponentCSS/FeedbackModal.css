@@ -1,0 +1,53 @@
+
+.feedback-modal-overlay{
+    position: fixed;
+    inset: 0;
+    background-color: rgba(250, 250, 210, .7);
+    z-index: 1;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.feedback-modal{
+    display: flex;
+
+    width: min(80vw, 600px);
+    max-height: 90vh;
+    aspect-ratio: 3/4;
+
+    box-sizing: border-box;
+    padding: 16px;
+
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
+
+    background-color: cornflowerblue;
+    border-radius: 15px;
+    border: 2px solid white;
+
+    color: white;
+}
+
+.feedback-modal-header,
+.feedback-modal-h5 {
+    margin: 0;
+}
+
+
+.feedback-modal-button{
+    margin-top: auto;
+}
+
+
+.feedback-modal-word-mapper {
+    display: flex;
+    width: 100%;
+    justify-content: center;
+    min-width: 0;
+    box-sizing: border-box;
+    padding: 0 12px;
+
+}

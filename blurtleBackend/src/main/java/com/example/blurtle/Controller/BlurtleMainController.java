@@ -9,6 +9,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.Map;
 
 @RestController
@@ -21,7 +22,9 @@ public class BlurtleMainController {
 
     private String scrambledWord = "";
 
-    private LocalDate currentDate = LocalDate.now();
+    private final String timeZone = "America/Chicago";
+
+    private LocalDate currentDate = LocalDate.now(ZoneId.of(timeZone));
 
     private final DictionaryService dictionaryService;
 
@@ -56,11 +59,17 @@ public class BlurtleMainController {
 
     @GetMapping("/getScrambledWord")
     public Map<String, String> getScrambledWord(){
-        if(randomWord.length() == 0 || !LocalDate.now().equals(currentDate)){
+        if(randomWord.isEmpty() || !LocalDate.now(ZoneId.of(timeZone)).equals(currentDate)){
             randomWord = dictionaryService.getDailyRandomWord();
             scrambledWord = scrambleService.scramble(randomWord);
             currentDate = LocalDate.now();
         }
+        return Map.of("word", randomWord, "scrambledWord", scrambledWord, "size", wordSize().toString());
+    }
+
+    @GetMapping("/rescramble")
+    public Map<String, String> rescramble(){
+        scrambledWord = scrambleService.rescramble(randomWord);
         return Map.of("word", randomWord, "scrambledWord", scrambledWord, "size", wordSize().toString());
     }
 

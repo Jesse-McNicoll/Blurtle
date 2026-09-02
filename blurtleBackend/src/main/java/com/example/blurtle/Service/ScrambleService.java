@@ -11,7 +11,7 @@ import java.util.stream.Collectors;
 @Service
 public class ScrambleService {
 
-    public static String scramble(String word) {
+    public String scramble(String word) {
 
         List<Character> chars = word.chars()
                 .mapToObj(c -> (char) c)
@@ -19,6 +19,21 @@ public class ScrambleService {
 
         Random random = new Random(word.hashCode());
         Collections.shuffle(chars, random);
+
+        StringBuilder sb = new StringBuilder();
+        for (char c : chars) {
+            sb.append(c);
+        }
+
+        return sb.toString();
+    }
+
+    public String rescramble(String word) {
+        List<Character> chars = word.chars()
+                .mapToObj(c -> (char) c)
+                .collect(Collectors.toList());
+
+        Collections.shuffle(chars, new Random());
 
         StringBuilder sb = new StringBuilder();
         for (char c : chars) {

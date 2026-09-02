@@ -1,9 +1,10 @@
 import {useEffect, useState} from 'react';
-import reactLogo from './assets/react.svg';
-import viteLogo from './assets/vite.svg';
-import heroImg from './assets/hero.png';
 import './App.css';
 import api from "./api.js";
+import FeedBackModal from "./Components/FeedbackModal.jsx";
+import WelcomeModal from "./Components/WelcomeModal.jsx";
+import WordMapper from "./Components/WordMapper.jsx";
+import PromptMapper from "./Components/PromptMapper.jsx";
 
 function App() {
     const [guess, setGuess] = useState("");
@@ -12,8 +13,10 @@ function App() {
     const [message, setMessage] = useState("");
     const [tries, setTries] = useState(0);
     const [shake, setShake] = useState(false);
-    const API_BASE = import.meta.env.VITE_API_BASE_URL;
-
+    const [showModal, setShowModal] = useState(localStorage.getItem("showModal") === null);
+    const [gameOver, setGameOver] = useState(false);
+    const [gameWin, setGameWin] = useState(false);
+    const [viewGameState, setViewGameState] = useState(false);
 
 
     useEffect(() => {
@@ -22,23 +25,28 @@ function App() {
             .catch(error => console.error("Error fetching data:", error));
     }, []);
 
+    const updateModal = () => {
+        setShowModal(false);
+        localStorage.setItem("showModal", "false");
+    }
+
+    const handleGameState = () => {
+        setViewGameState(true);
+    }
 
     const handleSubmit = async (e) => {
 
         e.preventDefault();
 
-
         if(tries >= 5){
             triggerShake();
             setMessage('Out of Attempts.  Try again tomorrow!')
-            // alert("Out of Attempts.  Try again tomorrow!");
             return;
         }
         setMessage("");
         if (guess.trim().length < 1) {
             triggerShake();
             setMessage("Please enter a guess.");
-            // alert("Please enter a guess.");
             return;
         }
 
@@ -46,8 +54,8 @@ function App() {
         console.log("Sending guess: ", guess);
 
         try{
-            const res = await api.post("/Blurtle/postGuessWord", { guessWord : guess });
-            const data = res.data;
+            const response = await api.post("/Blurtle/postGuessWord", { guessWord : guess });
+            const data = response.data;
             if(!data.validWord){
                 triggerShake();
                 setMessage("Not in game dictionary.  Please try again");
@@ -56,7 +64,7 @@ function App() {
             //Count the amount of successful attempts taken (valid words)
             setTries(prev => prev + 1);
 
-            console.log("Response: ", res.data);
+            console.log("Response: ", data);
 
             setGuesses(prev => [
                 ...prev,
@@ -68,6 +76,15 @@ function App() {
                     score: data.score
                 }
             ]);
+
+            if( data.exactMatch ){
+                setGameWin(true);
+                setGameOver(true);
+            }
+            else if( tries >= 4){
+                setGameOver(true);
+            }
+
             setGuess("");
         } catch (err){
             triggerShake();
@@ -76,6 +93,17 @@ function App() {
         }
 
     };
+
+    const handleRescramble = async () => {
+        try{
+            const response = await api.get("/Blurtle/rescramble");
+            setPrompt(response.data);
+        }
+        catch(error){
+            console.error(error);
+        }
+    }
+
 
 
     const triggerShake = () => {
@@ -90,26 +118,20 @@ function App() {
 
 
       <div className="app-container">
-        <h1>Blurtle</h1>
-        <h4>Unscramble the letters to form a word. <br/> Any word made from the available letters counts, but max points for using all of them!</h4>
-        <div>
-            <p className="rules">
-                <span className="red-text"> Red </span>= Valid Word, but incorrect use of available letters<br/>
-                <span className="blue-text"> Blue </span>= Valid Guess using only available letters, but not max points.<br/>
-                <span className="green-text">Green </span>= Perfect Score!
-            </p>
-        </div>
+          {showModal && <WelcomeModal updateModal={updateModal}/>}
+
+          { (gameOver && !viewGameState) && <FeedBackModal feedback={gameWin ? "Great job!" : "Sorry! Out of guesses!"}
+                                                           message="Check in tomorrow for a new challenge" onClick={handleGameState} guess={guesses.at(-1)}/> }
 
 
+      <h1>Blurtle!</h1>
+        <h4>Unscramble the letters to form a word.</h4>
 
-          {prompt && <h4 style={{
-              color: "#808080",
-              fontWeight: "bold"
-          }}>{prompt.scrambledWord}</h4>}
-
-        <form id="guessForm" onSubmit={handleSubmit}>
+          {prompt && <PromptMapper word={prompt.scrambledWord.toUpperCase()} guess={guess.toUpperCase()}></PromptMapper>}
+        <button disabled={gameOver} className="scramble-button" onClick={handleRescramble}> Rescramble! </button>
+        <form id="guessForm" onSubmit={handleSubmit} >
             <input
-                disabled={tries >= 5}
+                disabled={gameOver}
                 className={`guess-input ${shake ? "shake" : ""}`}
                 onAnimationEnd={() => setShake(false)}
                 type="text"
@@ -121,7 +143,7 @@ function App() {
           <br />
           <br />
 
-          <button type="submit">Guess</button>
+          <button type="submit" disabled={gameOver}>Guess</button>
         </form>
 
           {message && (
@@ -133,37 +155,12 @@ function App() {
         <div style={{ marginTop: "30px" }}>
           {guesses.map((g, index) => (
 
-              <div
-                  key={index}
-                  style={{
-                    display: "flex",
-                    justifyContent: "center",
-                    gap: "5px",
-                    marginBottom: "5px",
-                  }}
-              >
-                {g.word.split("").map((letter, i) => (
-                    <div
-                        key={i}
-                        style={{
-                            width: "clamp(28px, 9vw, 40px)",
-                            height: "clamp(28px, 9vw, 40px)",
-                            border: "2px solid gray",
-                            display: "flex",
-                            alignItems: "center",
-                            justifyContent: "center",
-                            fontWeight: "bold",
-                            fontSize: "clamp(14px, 5vw, 20px)",
-                            backgroundColor: g.exactMatch ? "green" : g.validGuess ? "blue" : "red",
-                            color: "white"
-                        }}
-                    >
-                      {letter}
-                    </div>
-                ))}
+              <div key={index} >
+                <WordMapper guess={g} />
               </div>
           ))}
         </div>
+
       </div>
   );
 }

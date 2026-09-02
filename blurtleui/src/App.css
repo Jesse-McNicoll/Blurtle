@@ -183,15 +183,7 @@
   }
 }
 
-.red-text{
-  color: red;
-}
-.blue-text{
-  color: blue;
-}
-.green-text{
-  color: green;
-}
+
 
 .shake {
   animation: shake 0.3s;
@@ -214,11 +206,35 @@
   box-sizing: border-box;
 }
 
-.rules {
-  text-align: left;
-  max-width: 620px;
-  margin: 0 auto 24px;
-  line-height: 1.5;
+.prompt {
+  display: flex;
+  width: 100%;
+  flex-direction: row;
+  justify-content: center;
+  margin: 32px 0;
+  color: white;
+  font-size: clamp(1rem, 1vw + 1rem, 3rem );
+
+}
+
+.prompt-letter{
+  display: flex;
+  flex: 1 1 0;
+  aspect-ratio: 1;
+  max-width: 30px;
+  min-width: 10px;
+  border-bottom: 2px solid gray;
+  margin: 2px;
+
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  font-size: clamp(20px, 7vw, 30px);
+  color: gray;
+}
+
+.prompt-letter.highlight {
+  background: green;
 }
 
 .guess-input {
@@ -258,23 +274,7 @@
   }
 }
 
-.modal {
-  display: none; /* Hidden by default */
-  position: fixed; /* Stay in place */
-  z-index: 1; /* Sit on top */
-  left: 0;
-  top: 0;
-  width: 100%; /* Full width */
-  height: 100%; /* Full height */
-  overflow: auto; /* Enable scroll if needed */
-  background-color: rgb(0,0,0); /* Fallback color */
-  background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+.scramble-button{
+  margin: 8px;
 }
 
-.modal-content {
-  background-color: #fefefe;
-  margin: 15% auto; /* 15% from the top and centered */
-  padding: 20px;
-  border: 1px solid #888;
-  width: 80%; /* Could be more or less, depending on screen size */
-}
