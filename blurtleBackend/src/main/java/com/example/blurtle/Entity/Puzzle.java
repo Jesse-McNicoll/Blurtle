@@ -10,7 +10,7 @@ public class Puzzle {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Long puzzleId;
     private LocalDate puzzleDate;
     private String puzzleWord;
     private String scrambledWord;
@@ -29,16 +29,16 @@ public class Puzzle {
                 "puzzleDate=" + puzzleDate +
                 ", puzzleWord='" + puzzleWord + '\'' +
                 ", scrambledWord='" + scrambledWord + '\'' +
-                ", id=" + id +
+                ", id=" + puzzleId +
                 '}';
     }
 
-    public Long getId() {
-        return id;
+    public Long getPuzzleId() {
+        return puzzleId;
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    public void setPuzzleId(Long id) {
+        this.puzzleId = id;
     }
 
     public LocalDate getPuzzleDate() {
