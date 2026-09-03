@@ -21,7 +21,7 @@ public class PuzzleResultId implements Serializable {
         if (this == o) return true;
         if (o == null || this.getClass() != o.getClass()) return false;
         PuzzleResultId that = (PuzzleResultId) o;
-        return (puzzle.equals(that.puzzle) && user.equals(that.user));
+        return (Objects.equals(that.puzzle, this.puzzle) && Objects.equals(that.user, this.user));
     }
 
     @Override
