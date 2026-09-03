@@ -1,15 +1,17 @@
 package com.example.blurtle.Entity;
 
-public class PuzzleResultId {
+import java.io.Serializable;
 
-    private Long puzzleId;
-    private Long userId;
+public class PuzzleResultId implements Serializable {
+
+    private Long puzzle;
+    private Long user;
 
     //default constructor
     public PuzzleResultId(){}
 
-    public PuzzleResultId(Long puzzleId, Long userId) {
-        this.puzzleId = puzzleId;
-        this.userId = userId;
+    public PuzzleResultId(Long puzzle, Long user) {
+        this.puzzle = puzzle;
+        this.user = user;
     }
 }
