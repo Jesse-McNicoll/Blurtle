@@ -11,19 +11,39 @@ public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long userId;
+
+    @Column(name = "first_name", nullable = false)
     private String firstName;
+
+    @Column(nullable = false)
     private String lastName;
+
+    @Column(nullable = false)
     private String email;
+
+    @Column(nullable = false)
     private Long longestStreak;
+
+    @Column(nullable = false)
     private Long currentStreak;
+
+    @Column(nullable = true)
     private LocalDate lastSolved;
 
-    public User(){}
+    public User(){
+        //Explicitly setting default values
+        longestStreak = 0L;
+        currentStreak = 0L;
+        //Localdate is omitted, as null values are allowed until the user has solved their first puzzle
+    }
 
-    public User(String email, String firstName, String lastName) {
-        this.email = email;
+    public User(String firstName, String lastName, String email) {
         this.firstName = firstName;
         this.lastName = lastName;
+        this.email = email;
+        longestStreak = 0L;
+        currentStreak = 0L;
+        //Again, omitting local date until confirmation of a first solved puzzle.
     }
 
     @Override
