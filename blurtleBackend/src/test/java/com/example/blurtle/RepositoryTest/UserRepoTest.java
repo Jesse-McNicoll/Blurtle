@@ -1,19 +1,24 @@
 package com.example.blurtle.RepositoryTest;
 
+import com.example.blurtle.BlurtleApplication;
 import com.example.blurtle.Entity.User;
 import com.example.blurtle.Repository.UserRepo;
+import com.example.blurtle.Service.ScrambleService;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.data.jpa.test.autoconfigure.DataJpaTest;
 import org.springframework.boot.jdbc.test.autoconfigure.AutoConfigureTestDatabase;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.context.annotation.Import;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 @DataJpaTest
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
+@Import(ScrambleService.class)
 public class UserRepoTest {
 
     @Autowired

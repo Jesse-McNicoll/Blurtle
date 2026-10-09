@@ -17,7 +17,7 @@ public class PuzzleResult {
     @JoinColumn(name = "puzzle_id")
     private Puzzle puzzle;
 
-    private Long numGuesses;
+    private Integer numGuesses;
 
     public User getUser() {
         return user;
@@ -35,11 +35,11 @@ public class PuzzleResult {
         this.puzzle = puzzle;
     }
 
-    public Long getNumGuesses() {
+    public Integer getNumGuesses() {
         return numGuesses;
     }
 
-    public void setNumGuesses(Long numGuesses) {
+    public void setNumGuesses(Integer numGuesses) {
         this.numGuesses = numGuesses;
     }
 
@@ -56,7 +56,7 @@ public class PuzzleResult {
     public PuzzleResult() {
     }
 
-    public PuzzleResult(User user, Puzzle puzzle, Long numGuesses, Boolean puzzleSolved) {
+    public PuzzleResult(User user, Puzzle puzzle, Integer numGuesses, Boolean puzzleSolved) {
         this.user = user;
         this.puzzle = puzzle;
         this.numGuesses = numGuesses;

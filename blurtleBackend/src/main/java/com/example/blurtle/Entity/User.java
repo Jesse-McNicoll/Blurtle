@@ -1,6 +1,8 @@
 package com.example.blurtle.Entity;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
 
 import java.time.LocalDate;
 
@@ -12,38 +14,34 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long userId;
 
+    @NotBlank(message = "First Name is required")
     @Column(name = "first_name", nullable = false)
     private String firstName;
 
-    @Column(nullable = false)
+    @NotBlank(message = "Last Name is required")
+    @Column(name = "last_name", nullable = false)
     private String lastName;
 
+    @NotBlank(message = "email is required")
+    @Email(message = "invalid email format")
     @Column(nullable = false)
     private String email;
 
     @Column(nullable = false)
-    private Long longestStreak;
+    private Long longestStreak = 0L;
 
     @Column(nullable = false)
-    private Long currentStreak;
+    private Long currentStreak = 0L;
 
     @Column(nullable = true)
     private LocalDate lastSolved;
 
-    public User(){
-        //Explicitly setting default values
-        longestStreak = 0L;
-        currentStreak = 0L;
-        //Localdate is omitted, as null values are allowed until the user has solved their first puzzle
-    }
+    public User(){}
 
     public User(String firstName, String lastName, String email) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
-        longestStreak = 0L;
-        currentStreak = 0L;
-        //Again, omitting local date until confirmation of a first solved puzzle.
     }
 
     @Override
