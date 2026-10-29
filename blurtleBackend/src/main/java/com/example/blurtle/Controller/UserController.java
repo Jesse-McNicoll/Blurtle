@@ -1,6 +1,7 @@
 package com.example.blurtle.Controller;
 
 import com.example.blurtle.RequestDTO.CreateUserDTO;
+import com.example.blurtle.ResponseDTO.UserResponseDTO;
 import com.example.blurtle.Service.UserService;
 import jakarta.validation.Valid;
 import com.example.blurtle.Entity.User;
@@ -27,6 +28,19 @@ public class UserController {
         try{
             User newUser = userService.addUser(user);
             return new ResponseEntity<>(newUser, HttpStatus.OK);
+        }
+        catch(DataIntegrityViolationException e){
+            return ResponseEntity
+                    .status(HttpStatus.CONFLICT)
+                    .body(e.getMessage());
+        }
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<?> getUserById(@Valid @PathVariable(required = true) Long id){
+        try{
+            UserResponseDTO user = userService.getUserById(id);
+            return new ResponseEntity<>(user, HttpStatus.OK);
         }
         catch(DataIntegrityViolationException e){
             return ResponseEntity
