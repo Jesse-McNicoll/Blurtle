@@ -1,7 +1,10 @@
 package com.example.blurtle.Controller;
 
 import com.example.blurtle.Entity.Puzzle;
+import com.example.blurtle.ResponseDTO.PuzzleResponseDTO;
 import com.example.blurtle.Service.PuzzleService;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -21,10 +24,9 @@ public class PuzzleController {
     }
 
     @GetMapping("/getDailyPuzzle")
-    public Map<String, String> getPuzzleWord(){
+    public ResponseEntity<PuzzleResponseDTO> getPuzzleWord(){
         Puzzle puzzle = puzzleService.getDailyPuzzle();
-        return Map.of("scrambledWord", puzzle.getScrambledWord(),
-                "size", String.valueOf(puzzle.getScrambledWord().length()));
+        return new ResponseEntity<>(new PuzzleResponseDTO(puzzle.getScrambledWord()), HttpStatus.OK);
     }
 
 }

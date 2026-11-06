@@ -61,7 +61,7 @@ public class GameService {
         return guessScore;
     }
 
-    public String rescramble(String word){
-        return scrambleService.rescramble(word);
+    public String rescramble(){
+        return scrambleService.rescramble(puzzleService.getDailyPuzzle().getPuzzleWord());
     }
 }

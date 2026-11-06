@@ -2,6 +2,7 @@ package com.example.blurtle.Controller;
 
 import com.example.blurtle.Model.GuessScore;
 import com.example.blurtle.Model.GuessWord;
+import com.example.blurtle.ResponseDTO.PuzzleResponseDTO;
 import com.example.blurtle.Service.DictionaryService;
 import com.example.blurtle.Service.GameService;
 import com.example.blurtle.Service.ScrambleService;
@@ -36,15 +37,14 @@ public class GameController {
     }
 
     @GetMapping("/rescramble")
-    public ResponseEntity<String> rescramble(){
-        scrambledWord = gameService.rescramble(randomWord);
-        return new  ResponseEntity<>(scrambledWord, HttpStatus.OK);
+    public ResponseEntity<PuzzleResponseDTO> rescramble(){
+        return new ResponseEntity<>(new PuzzleResponseDTO(gameService.rescramble()), HttpStatus.OK);
     }
 
     //TODO: change usage in Blurtle Front-End
     @PostMapping("/checkGuessWord")
-    public GuessScore postGuessWord(@RequestBody GuessWord guessWord){
+    public ResponseEntity<GuessScore> postGuessWord(@RequestBody GuessWord guessWord){
         logger.info("Method \'checkGuessWord\' has been invoked with a guess of: " + guessWord.getGuessWord());
-        return gameService.checkGuess(guessWord.getGuessWord().toLowerCase());
+        return new ResponseEntity<>(gameService.checkGuess(guessWord.getGuessWord().toLowerCase()), HttpStatus.OK);
     }
 }

@@ -27,7 +27,7 @@ public class UserController {
     public ResponseEntity<?> addUser(@Valid @RequestBody CreateUserDTO user) {
         try{
             UserResponseDTO newUser = userService.addUser(user);
-            return new ResponseEntity<>(newUser, HttpStatus.OK);
+            return new ResponseEntity<>(newUser, HttpStatus.CREATED);
         }
         catch(DataIntegrityViolationException e){
             return ResponseEntity
@@ -44,7 +44,7 @@ public class UserController {
         }
         catch(NoSuchElementException e){
             return ResponseEntity
-                    .status(HttpStatus.CONFLICT)
+                    .status(HttpStatus.NOT_FOUND)
                     .body(e.getMessage());
         }
     }
