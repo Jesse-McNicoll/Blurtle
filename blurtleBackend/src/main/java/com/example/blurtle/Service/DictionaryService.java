@@ -1,6 +1,7 @@
 package com.example.blurtle.Service;
 
 import com.example.blurtle.Model.GuessScore;
+import com.example.blurtle.Model.GuessStatus;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.cglib.core.Local;
@@ -70,57 +71,13 @@ public class DictionaryService {
             dailyWord = weekdayDictionary.get(random.nextInt(weekdayDictionary.size()));
         }
         else{
-//            dailyWord = weekendDictionary.get(random.nextInt(weekendDictionary.size()));
             dailyWord = weekdayDictionary.get(random.nextInt(weekdayDictionary.size()));
-
         }
         return dailyWord;
     }
 
-    /**
-     * Method Name: checkGuess
-     * Parameter Input: String guessWord
-     * Output: GuessScore object, an object containing details on guess quality
-     * Description: Evaluate correctness of guess.  If it is an exact match, set boolean for exactMatch to true.
-     *      Calculate score.  Save guess and also size.
-     */
-    public GuessScore checkGuess(String guessWord){
-        String word = dailyWord.toLowerCase();
-        String guess = guessWord.toLowerCase();
-        GuessScore guessScore = new GuessScore();
-        guessScore.setGuessWord(guess);
-        if(!guessDictionary.contains(guess)){
-            return guessScore;
-        }
-        guessScore.setValidWord(true);
-        if(guess.length() > word.length()) {
-            return guessScore;
-        }
-
-        //Validate that the guess is a scramble of the word
-        int[] alphabetArray = new int[26];
-        for (int i = 0; i < word.length(); i++) {
-            alphabetArray[word.charAt(i) - 'a']++;
-        }
-        for (int i = 0; i < guess.length(); i++) {
-            alphabetArray[guess.charAt(i) - 'a']--;
-        }
-        guessScore.setValidGuess(true);
-        guessScore.setExactMatch(true);
-        for(int i = 0; i < alphabetArray.length; i++) {
-            if(alphabetArray[i] != 0) {
-                guessScore.setExactMatch(false);
-            }
-            if (alphabetArray[i] < 0) {
-                guessScore.setValidGuess(false);
-                break;
-            }
-        }
-
-        guessScore.setScore(guess.length());
-        guessScore.setLength(guess.length());
-
-        logger.debug("Guess word: " + guessWord + " Score: " + guessScore.getScore() + " isExactMatch: " + guessScore.isExactMatch());
-        return guessScore;
+    public boolean isValidWord(String guess){
+        return guessDictionary.contains(guess);
     }
+
 }

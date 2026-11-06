@@ -9,7 +9,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
-import java.util.Optional;
+import java.util.NoSuchElementException;
+
 
 
 @Service
@@ -18,7 +19,7 @@ public class UserService {
     Logger log = LoggerFactory.getLogger(UserService.class);
 
 
-    private UserRepo userRepo;
+    private final UserRepo userRepo;
 
     public UserService(UserRepo userRepo) {
         this.userRepo = userRepo;
@@ -31,7 +32,7 @@ public class UserService {
      * Description: Method to save User object to database.
      * Throws and catches DataAccessException on failure
      */
-    public User addUser(CreateUserDTO request){
+    public UserResponseDTO addUser(CreateUserDTO request){
 
         User user = new User(
                 request.firstName(),
@@ -42,7 +43,8 @@ public class UserService {
         try{
             User inputUser = userRepo.save(user);
             log.info("User: {} saved successfully", inputUser);
-            return inputUser;
+            return new UserResponseDTO(inputUser);
+
         }
         catch(DataIntegrityViolationException e){
             log.warn("Failed to save user", e);
@@ -52,7 +54,7 @@ public class UserService {
 
     public UserResponseDTO getUserById(Long id){
 
-        User responseUser = userRepo.findById(id).orElseThrow(() -> new RuntimeException("User not found"));
+        User responseUser = userRepo.findById(id).orElseThrow(() -> new NoSuchElementException("User not found"));
 
         UserResponseDTO userResponseDTO = new UserResponseDTO(
                 responseUser.getUserId(),
