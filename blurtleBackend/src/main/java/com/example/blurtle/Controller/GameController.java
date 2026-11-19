@@ -6,6 +6,7 @@ import com.example.blurtle.ResponseDTO.PuzzleResponseDTO;
 import com.example.blurtle.Service.DictionaryService;
 import com.example.blurtle.Service.GameService;
 import com.example.blurtle.Service.ScrambleService;
+import jakarta.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -43,7 +44,7 @@ public class GameController {
 
     //TODO: change usage in Blurtle Front-End
     @PostMapping("/checkGuessWord")
-    public ResponseEntity<GuessScore> postGuessWord(@RequestBody GuessWord guessWord){
+    public ResponseEntity<GuessScore> postGuessWord(@Valid @RequestBody GuessWord guessWord){
         logger.info("Method \'checkGuessWord\' has been invoked with a guess of: " + guessWord.getGuessWord());
         return new ResponseEntity<>(gameService.checkGuess(guessWord.getGuessWord().toLowerCase()), HttpStatus.OK);
     }

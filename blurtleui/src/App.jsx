@@ -5,8 +5,10 @@ import FeedBackModal from "./Components/FeedbackModal.jsx";
 import WelcomeModal from "./Components/WelcomeModal.jsx";
 import WordMapper from "./Components/WordMapper.jsx";
 import PromptMapper from "./Components/PromptMapper.jsx";
+import UserModal from "./Components/UserModal.jsx";
 
 function App() {
+    const [showCreateUser, setShowCreateUser] = useState(false);
     const [guess, setGuess] = useState("");
     const [guesses, setGuesses] = useState([]);
     const [prompt, setPrompt] = useState(null);
@@ -17,10 +19,16 @@ function App() {
     const [gameOver, setGameOver] = useState(false);
     const [gameWin, setGameWin] = useState(false);
     const [viewGameState, setViewGameState] = useState(false);
+    const GuessStatus = {
+        INVALID_WORD: "INVALID_WORD",
+        VALID_WORD: "VALID_WORD",
+        VALID_GUESS: "VALID_GUESS",
+        EXACT_MATCH: "EXACT_MATCH"
+    };
 
 
     useEffect(() => {
-        api.get("/Blurtle/getScrambledWord")
+        api.get("/Blurtle/puzzle/getDailyPuzzle")
             .then(response => setPrompt(response.data))
             .catch(error => console.error("Error fetching data:", error));
     }, []);
@@ -54,9 +62,9 @@ function App() {
         console.log("Sending guess: ", guess);
 
         try{
-            const response = await api.post("/Blurtle/postGuessWord", { guessWord : guess });
+            const response = await api.post("/Blurtle/checkGuessWord", { guessWord : guess });
             const data = response.data;
-            if(!data.validWord){
+            if(data.guessStatus === GuessStatus.INVALID_WORD){
                 triggerShake();
                 setMessage("Not in game dictionary.  Please try again");
                 return;
@@ -70,14 +78,11 @@ function App() {
                 ...prev,
                 {
                     word: data.guessWord.toUpperCase(),
-                    exactMatch: data.exactMatch,
-                    validGuess: data.validGuess,
-                    validWord: data.validWord,
-                    score: data.score
+                    guessStatus: data.guessStatus
                 }
             ]);
 
-            if( data.exactMatch ){
+            if( GuessStatus.EXACT_MATCH === data.guessStatus ){
                 setGameWin(true);
                 setGameOver(true);
             }
@@ -123,6 +128,20 @@ function App() {
           { (gameOver && !viewGameState) && <FeedBackModal feedback={gameWin ? "Great job!" : "Sorry! Out of guesses!"}
                                                            message="Check in tomorrow for a new challenge" onClick={handleGameState} guess={guesses.at(-1)}/> }
 
+      <div className="top-bar">
+          <button
+              className="account-link"
+              onClick={() => setShowCreateUser(true)}
+          >
+              Log in or create user
+          </button>
+      </div>
+
+      {showCreateUser && (
+          <UserModal
+              onClose={() => setShowCreateUser(false)}
+          />
+      )}
 
       <h1>Blurtle!</h1>
         <h4>Unscramble the letters to form a word.</h4>
@@ -139,7 +158,6 @@ function App() {
                 maxLength={15}
                 onChange={(e) => setGuess(e.target.value)}
             />
-
           <br />
           <br />
 

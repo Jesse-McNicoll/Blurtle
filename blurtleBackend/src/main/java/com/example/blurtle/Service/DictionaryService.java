@@ -60,13 +60,12 @@ public class DictionaryService {
 
     }
 
-    public String getDailyRandomWord() {
+    public String getRandomWordForDate(LocalDate puzzleDate) {
 
-        //Create a random object seeded with today's date according to GMT.
+        //Create a random object seeded with the input date according to GMT.
         //Use the first int of the random int stream to specify the index of the word used from the prompt dictionary
-        LocalDate currentDate = LocalDate.now(ZoneId.of(timeZone));
-        Random random = new Random(currentDate.toEpochDay());
-        DayOfWeek day = currentDate.getDayOfWeek();
+        Random random = new Random(puzzleDate.toEpochDay());
+        DayOfWeek day = puzzleDate.getDayOfWeek();
         if(weekdays.contains(day)) {
             dailyWord = weekdayDictionary.get(random.nextInt(weekdayDictionary.size()));
         }

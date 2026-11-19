@@ -1,3 +1,46 @@
+.create-user-modal-overlay {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: rgba(0, 0, 0, 0.4);
+  z-index: 1000;
+}
+
+.create-user-modal {
+  background: cornflowerblue;
+  padding: 50px;
+  border-radius: 12px;
+}
+
+.create-user-modal input {
+  width: 100%;
+  padding: 10px 12px;
+  font-size: 16px;
+  margin-bottom: 10px;
+  box-sizing: border-box;
+}
+
+.top-bar {
+  width: 100%;
+  display: flex;
+  justify-content: flex-end;
+  padding: 12px 20px;
+  box-sizing: border-box;
+}
+
+.account-link {
+  position: fixed;
+  top: 20px;
+  right: 30px;
+
+  background: none;
+  border: none;
+  cursor: pointer;
+  text-decoration: underline;
+}
+
 .counter {
   font-size: 16px;
   padding: 5px 10px;

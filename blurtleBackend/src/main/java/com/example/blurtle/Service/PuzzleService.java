@@ -26,7 +26,7 @@ public class PuzzleService {
     public Puzzle findByPuzzleDate(LocalDate puzzleDate){
 
         return puzzleRepo.findByPuzzleDate(puzzleDate).orElseGet(() -> {
-                String puzzleWord = dictionaryService.getDailyRandomWord();
+                String puzzleWord = dictionaryService.getRandomWordForDate(puzzleDate);
                 Puzzle puzzle = new Puzzle(puzzleDate,
                         puzzleWord, scrambleService.scramble(puzzleWord));
 

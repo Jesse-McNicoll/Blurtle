@@ -5,3 +5,11 @@ Content-Type: application/json
 {
   "guessWord": "subside"
 }
+
+### POST guess word to check -- correct
+POST http://localhost:8080/Blurtle/checkGuessWord
+Content-Type: application/json
+
+{
+"guessWord": "laciest"
+}
